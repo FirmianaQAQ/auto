@@ -1,0 +1,23 @@
+/**
+* author: <%=file.author%>
+* Date: <%=file.date%>
+* Name: <%=file.name%>
+* Desc: <%=file.desc%>
+*/
+
+export default {
+<%content.forEach((item, i) => {%>
+  /**
+  * <%=item.desc%>
+  * @param data {object} 参数
+  * @param config {object} 可能回有的配置
+  * @returns {Promise<*>}
+  */
+  async <%=item.name%> (data = {}, config = {}) {
+  let r = await toaioxs('
+  <%=item.url%>', data, config)
+  return r
+  }
+  <%if (i >= 0 && i < content.length - 1) {%>,<%}%>
+  <%})%>
+  }

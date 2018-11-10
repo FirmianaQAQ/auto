@@ -1,0 +1,22 @@
+/**
+ * author: <%=file.author%>
+ * Date: <%=file.date%>
+ * Name: <%=file.name%>
+ * Desc: <%=file.desc%>
+ */
+
+
+module.exports = {
+  render: true,
+  file: {
+    name: '<%=file.name%>',
+    desc: '<%=file.desc%>'
+  },
+  content: [<%content.forEach((item, i) => {%><%if (file.name===item.name) {%>
+    {
+      url:'<%=item.url%>',
+      desc:'<%=item.desc%>',
+      method:'<%=item.method%>'
+    }<%if (i >= 0 && i < content.length - 1) {%>,<%}%><%}%><%})%>
+  ]
+}

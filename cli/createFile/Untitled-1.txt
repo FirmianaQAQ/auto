@@ -1,0 +1,28 @@
+/**
+ * 生成动态api测试文件
+ * @param fileSrc  生成文件的根目录
+ * @param fileTpl  生成文件所需的模板
+ * @param api      api所在路径
+ * @returns {Promise<void>}
+ */
+async function testApiRun(fileSrc, fileTpl, api) {
+  let src = resolvePath(fileSrc)
+  let tpl = resolvePath(fileTpl)
+  let apiFileExists = exists(src)
+  if (!apiFileExists) {
+    fs.mkdirSync(src)
+  }
+  for (let k in api) {
+    let data = api[k]
+    console.log(333, data)
+    if (data) {
+      data.file = {
+        ...api[k].file,
+        ...someFileInfo
+      }
+      let r = await render(tpl, api[k])
+      fs.writeFileSync(`${src}/${k}.js`, r)
+    }
+  }
+}
+testApiRun(testApiPath, '../template/api-test.ejs', api)
