@@ -5,19 +5,48 @@
 * Desc: <%=file.desc%>
 */
 
-export default {
-<%content.forEach((item, i) => {%>
-  /**
-  * <%=item.desc%>
-  * @param data {object} 参数
-  * @param config {object} 可能回有的配置
-  * @returns {Promise<*>}
-  */
-  async <%=item.name%> (data = {}, config = {}) {
-  let r = await toaioxs('
-  <%=item.url%>', data, config)
-  return r
-  }
-  <%if (i >= 0 && i < content.length - 1) {%>,<%}%>
-  <%})%>
-  }
+/* global describe */
+/* global before */
+/* global beforeEach */
+/* global it */
+'use strict'
+
+/**
+* 引入依赖
+*/
+const assert = require('assert')
+const reqPromise = require('request-promise-native')
+
+/**
+* 配置测试信息
+* @param url 接口url
+*/
+const url = ''
+
+/**
+* 接口提交测试
+*/
+describe('接口提交基本测试', async function () {<%content.forEach((item, i) => {%>
+  describe('<%=item.url%>  <%=item.method%> <%=item.desc%>', async function () {
+    // it 可根据实际需求增加
+    it('{ 请输入测试结果 }', async function () {
+      let r = (await reqPromise({
+        method: '<%=(item.method).toUpperCase()%>',
+        uri: url + '<%=item.url%>',
+        //请根据实际填写以下参数
+        headers: {
+            
+        },
+        form: {
+          
+        },
+        qs: {
+                    
+        },
+        json: true
+      }))
+      // console.log(r)
+      assert.strictEqual('请输入实际值', '请输入期望值')
+    })
+  })<%})%>
+})

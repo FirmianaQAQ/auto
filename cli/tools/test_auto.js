@@ -55,18 +55,49 @@ async function TestApiSet(api, fileSrc, fileTpl) {
     }
   }
   console.log('\x1b[32m', '✔  成功生成待渲染文件', '\033[0m')
-  return 'ok'
 }
 
 /**
- * 生成标准文件
+ * 生成动态api测试文件
+ * @param fileSrc  生成文件的根目录
+ * @param fileTpl  生成文件所需的模板
+ * @param apiSrc      api所在路径
+ * @returns {Promise<void>}
+ */
+async function testApiRun(fileSrc, fileTpl, apiSrc) {
+  let src = resolvePath(fileSrc)
+  let tpl = resolvePath(fileTpl)
+  let api = require(apiSrc)
+  let apiFileExists = exists(src)
+  let apiName = []
+  if (!apiFileExists) {
+    console.log(src)
+    fs.mkdirSync(src)
+  }
+  for (let k in api) {
+    apiName.push(k)
+    let data = api[k]
+    if (data.render) {
+      data.file = {
+        ...api[k].file,
+        ...someFileInfo
+      }
+      let r = await render(tpl, api[k])
+      fs.writeFileSync(`${src}/test_${k}.js`, r)
+      console.log('\x1b[32m', '✔  自动生成文件 -->', fileSrc + ' -->', 'test_' + k + '.js', '\033[0m')
+    }
+  }
+}
+
+/**
+ * 生成开始文件
  * @param fileSrc  生成文件的根目录
  * @param fileTpl  生成文件所需的模板
  * @param fileName 生成文件的名字
  * @param fileDesc 生成文件的描述
  * @returns {Promise<void>}
  */
-async function testAuto(fileSrc, fileTpl, fileName, fileDesc) {
+async function testBegin(fileSrc, fileTpl, fileName, fileDesc) {
   let src = resolvePath(fileSrc)
   let tpl = resolvePath(fileTpl)
   let apiFileExists = exists(src)
@@ -83,7 +114,35 @@ async function testAuto(fileSrc, fileTpl, fileName, fileDesc) {
   }
   let fileRender = await render(tpl, fileSet)
   fs.writeFileSync(`${src}/${fileName}.js`, fileRender)
-  console.log('\x1b[32m', '✔  自动生成文件 -->', fileSrc+' -->',fileName + '.js', '\033[0m')
+  console.log('\x1b[32m', '✔  生成起始文件 -->', fileSrc + ' -->', fileName + '.js', '\033[0m')
+}
+
+/**
+ * 生成结束文件
+ * @param fileSrc  生成文件的根目录
+ * @param fileTpl  生成文件所需的模板
+ * @param fileName 生成文件的名字
+ * @param fileDesc 生成文件的描述
+ * @returns {Promise<void>}
+ */
+async function testEnd(fileSrc, fileTpl, fileName, fileDesc) {
+  let src = resolvePath(fileSrc)
+  let tpl = resolvePath(fileTpl)
+  let apiFileExists = exists(src)
+  if (!apiFileExists) {
+    fs.mkdirSync(src)
+  }
+  let fileSet = {
+    file: {
+      ...someFileInfo,
+      name: fileName,
+      desc: fileDesc
+    },
+    content: fileName
+  }
+  let fileRender = await render(tpl, fileSet)
+  fs.writeFileSync(`${src}/${fileName}.js`, fileRender)
+  console.log('\x1b[32m', '✔  生成结束文件 -->', fileSrc + ' -->', fileName + '.js', '\033[0m')
 }
 
 /**
@@ -105,6 +164,8 @@ async function testSrcTip(fileList, color) {
 
 module.exports = {
   TestApiSet,
-  testAuto,
+  testApiRun,
+  testBegin,
+  testEnd,
   testSrcTip
 }
