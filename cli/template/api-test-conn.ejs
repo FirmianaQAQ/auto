@@ -18,6 +18,10 @@ const assert = require('assert')
 const req = require('co-request')
 const api = require('../models/api')
 
+/**
+* 引入变量
+*/
+const paramG = require('../tests/aaa_aBegin')
 
 describe('接口连通性及其提交方式测试', async function () {
     for (let i in api) {
