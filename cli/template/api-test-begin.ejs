@@ -4,3 +4,18 @@
 * Name: <%=file.name%>
 * Desc: <%=file.desc%>
 */
+
+/* global describe */
+/* global before */
+/* global beforeEach */
+/* global it */
+'use strict'
+
+/**
+* 引入依赖
+*/
+const $ = require('meeko')
+const assert = require('assert')
+const req = require('co-request')
+const api = require('../models/api')
+

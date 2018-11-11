@@ -1,0 +1,41 @@
+/**
+* author: <%=file.author%>
+* Date: <%=file.date%>
+* Name: <%=file.name%>
+* Desc: <%=file.desc%>
+*/
+
+/* global describe */
+/* global before */
+/* global beforeEach */
+/* global it */
+'use strict'
+
+/**
+* 引入依赖
+*/
+const assert = require('assert')
+const req = require('co-request')
+const api = require('../models/api')
+
+
+describe('接口连通性及其提交方式测试', async function () {
+    for (let i in api) {
+      let item = api[i]
+      for (let k in item) {
+        let s = `测试  ${k}`
+        let nbspStr = ''
+        if (item[k].method === 'post') {
+          nbspStr = '  '
+        } else if (item[k].method === 'get') {
+          nbspStr = '   '
+        }
+        it(s.fillStr(' ', 30) + item[k].method + nbspStr + (item[k].desc)[0], async function () {
+          let r = await req[item[k].method](url + k)
+          assert.strictEqual(200, r.statusCode)
+          r = await req[item[k].method === 'get' ? 'post' : 'get']({ url: url + k, json: true })
+          assert.strictEqual(item[k].token ? 401 : 405, +r.body.code)
+        })
+      }
+    }
+})

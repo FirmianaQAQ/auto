@@ -5,7 +5,7 @@
  * Desc: 自动生成测试文件
  */
 
-const { TestApiSet, testBegin, testApiRun, testEnd } = require('../tools/test_auto')
+const { TestApiSet, testBegin, testConn, testApiRun, testEnd } = require('../tools/test_auto')
 
 /**
 * 定义接口测试根目录
@@ -24,8 +24,16 @@ TestApiSet(
 testBegin(
   testApiPath,
   '../template/api-test-begin.ejs',
-  'aaa_abegin',
+  'aaa_aBegin',
   '接口测试开始，获取相关信息'
+)
+
+// 生成连通性测试文件
+testConn(
+  testApiPath,
+  '../template/api-test-conn.ejs',
+  'aaa_aConn',
+  '接口连通性测试'
 )
 
 // 生成中间文件
@@ -39,6 +47,6 @@ testApiRun(
 testEnd(
   testApiPath,
   '../template/api-test-end.ejs',
-  'zzz_zend',
+  'zzz_zEnd',
   '接口测试结束'
 )

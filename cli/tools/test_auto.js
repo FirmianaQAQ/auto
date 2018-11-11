@@ -84,7 +84,7 @@ async function testApiRun(fileSrc, fileTpl, apiSrc) {
       }
       let r = await render(tpl, api[k])
       fs.writeFileSync(`${src}/test_${k}.js`, r)
-      console.log('\x1b[32m', '✔  自动生成文件 -->', fileSrc + ' -->', 'test_' + k + '.js', '\033[0m')
+      console.log('\x1b[32m', '✔  生成测试用例 -->', fileSrc + ' -->', 'test_' + k + '.js', '\033[0m')
     }
   }
 }
@@ -98,6 +98,34 @@ async function testApiRun(fileSrc, fileTpl, apiSrc) {
  * @returns {Promise<void>}
  */
 async function testBegin(fileSrc, fileTpl, fileName, fileDesc) {
+  let src = resolvePath(fileSrc)
+  let tpl = resolvePath(fileTpl)
+  let apiFileExists = exists(src)
+  if (!apiFileExists) {
+    fs.mkdirSync(src)
+  }
+  let fileSet = {
+    file: {
+      ...someFileInfo,
+      name: fileName,
+      desc: fileDesc
+    },
+    content: fileName
+  }
+  let fileRender = await render(tpl, fileSet)
+  fs.writeFileSync(`${src}/${fileName}.js`, fileRender)
+  console.log('\x1b[32m', '✔  生成起始文件 -->', fileSrc + ' -->', fileName + '.js', '\033[0m')
+}
+
+/**
+ * 生成开始文件
+ * @param fileSrc  生成文件的根目录
+ * @param fileTpl  生成文件所需的模板
+ * @param fileName 生成文件的名字
+ * @param fileDesc 生成文件的描述
+ * @returns {Promise<void>}
+ */
+async function testConn(fileSrc, fileTpl, fileName, fileDesc) {
   let src = resolvePath(fileSrc)
   let tpl = resolvePath(fileTpl)
   let apiFileExists = exists(src)
@@ -165,6 +193,7 @@ async function testSrcTip(fileList, color) {
 module.exports = {
   TestApiSet,
   testApiRun,
+  testConn,
   testBegin,
   testEnd,
   testSrcTip
