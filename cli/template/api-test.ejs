@@ -12,29 +12,20 @@
 'use strict'
 
 /**
-* 引入依赖
-*/
-const assert = require('assert')
-const reqPromise = require('request-promise-native')
-
-/**
 * 引入变量
 */
 const paramG = require('../tests/aaa_aBegin')
-
-/**
-* 配置测试信息
-* @param url 接口url
-*/
-const url = ''
+const assert = paramG.assert
+const reqPromise = paramG.reqPromise
+const url = paramG.url
 
 /**
 * 接口提交测试
 */
 describe('接口提交基本测试', async function () {<%content.forEach((item, i) => {%>
   describe('<%=item.url%>  <%=item.method%> <%=item.desc%>', async function () {
-    // it 可根据实际需求增加
-    it('{ 请输入测试结果 }', async function () {
+    // it 可根据实际需求增加 (默认跳过)
+    it.skip('{ 请输入测试结果 }', async function () {
       let r = (await reqPromise({
         method: '<%=(item.method).toUpperCase()%>',
         uri: url + '<%=item.url%>',

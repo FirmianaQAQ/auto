@@ -97,7 +97,7 @@ async function testApiRun(fileSrc, fileTpl, apiSrc) {
  * @param fileDesc 生成文件的描述
  * @returns {Promise<void>}
  */
-async function testBegin(fileSrc, fileTpl, fileName, fileDesc) {
+async function testBase(fileSrc, fileTpl, fileName, fileDesc) {
   let src = resolvePath(fileSrc)
   let tpl = resolvePath(fileTpl)
   let apiFileExists = exists(src)
@@ -114,7 +114,7 @@ async function testBegin(fileSrc, fileTpl, fileName, fileDesc) {
   }
   let fileRender = await render(tpl, fileSet)
   fs.writeFileSync(`${src}/${fileName}.js`, fileRender)
-  console.log('\x1b[32m', '✔  生成起始文件 -->', fileSrc + ' -->', fileName + '.js', '\033[0m')
+  console.log('\x1b[32m', '✔  生成基本配置 -->', fileSrc + ' -->', fileName + '.js', '\033[0m')
 }
 
 /**
@@ -174,6 +174,34 @@ async function testEnd(fileSrc, fileTpl, fileName, fileDesc) {
 }
 
 /**
+ * 生成业务线文件
+ * @param fileSrc  生成文件的根目录
+ * @param fileTpl  生成文件所需的模板
+ * @param fileName 生成文件的名字
+ * @param fileDesc 生成文件的描述
+ * @returns {Promise<void>}
+ */
+async function testVoca(fileSrc, fileTpl, fileName, fileDesc) {
+  let src = resolvePath(fileSrc)
+  let tpl = resolvePath(fileTpl)
+  let apiFileExists = exists(src)
+  if (!apiFileExists) {
+    fs.mkdirSync(src)
+  }
+  let fileSet = {
+    file: {
+      ...someFileInfo,
+      name: fileName,
+      desc: fileDesc
+    },
+    content: fileName
+  }
+  let fileRender = await render(tpl, fileSet)
+  fs.writeFileSync(`${src}/${fileName}.js`, fileRender)
+  console.log('\x1b[32m', '✔  生成业务文件 -->', fileSrc + ' -->', fileName + '.js', '\033[0m')
+}
+
+/**
  * 文件目录提示
  * @param color  控制台色彩
  * @param fileList  文件所属目录
@@ -194,7 +222,8 @@ module.exports = {
   TestApiSet,
   testApiRun,
   testConn,
-  testBegin,
+  testBase,
+  testVoca,
   testEnd,
   testSrcTip
 }

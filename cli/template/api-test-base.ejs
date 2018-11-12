@@ -17,5 +17,20 @@
 const $ = require('meeko')
 const assert = require('assert')
 const req = require('co-request')
-const api = require('../models/api')
+const reqPromise = require('request-promise-native')
 
+/**
+* 配置所需参数
+*/
+const api = require('../models/api')
+const url = ''
+
+
+module.exports = {
+  $,
+  assert,
+  req,
+  reqPromise,
+  api,
+  url
+}
